@@ -2,6 +2,8 @@
 
 > Run some code when the process exits
 
+This is a fork of [sindresorhus/exit-hook](exit-hook) with dual ESM/CJS support.
+
 The `process.on('exit')` event doesn't catch all the ways a process can exit.
 
 This package is useful for cleaning up before exiting.
@@ -69,7 +71,7 @@ import {asyncExitHook} from 'exit-hook';
 
 asyncExitHook(async () => {
 	console.log('Exiting');
-}, 300);
+});
 
 throw new Error('🦄');
 
@@ -100,7 +102,8 @@ The callback function to execute when the process exits via `gracefulExit`, and 
 
 ##### minimumWait
 
-Type: `number`
+Type: `number`\
+Default: `500`
 
 The amount of time in milliseconds that the `onExit` function is expected to take.
 

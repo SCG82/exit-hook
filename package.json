@@ -1,26 +1,42 @@
 {
-	"name": "exit-hook",
-	"version": "3.1.3",
-	"description": "Run some code when the process exits",
+	"name": "@scg82/exit-hook",
+	"version": "3.2.1",
+	"description": "Run some code when the process exits (ESM/CJS)",
 	"license": "MIT",
-	"repository": "sindresorhus/exit-hook",
-	"funding": "https://github.com/sponsors/sindresorhus",
-	"author": {
-		"name": "Sindre Sorhus",
-		"email": "sindresorhus@gmail.com",
-		"url": "https://sindresorhus.com"
-	},
+	"repository": "https://github.com/SCG82/exit-hook",
+	"author": "SCG82 <scg082+github@gmail.com>",
 	"type": "module",
-	"exports": "./index.js",
+	"main": "./dist/cjs/index.cjs",
+	"types": "./dist/cjs/index.d.cts",
+	"module": "./dist/index.js",
+	"exports": {
+		".": {
+			"import": {
+				"types": "./dist/index.d.ts",
+				"default": "./dist/index.js"
+			},
+			"require": {
+				"types": "./dist/cjs/index.d.cts",
+				"default": "./dist/cjs/index.cjs"
+			}
+		},
+		"./package.json": "./package.json"
+	},
+	"sideEffects": false,
 	"engines": {
 		"node": "^12.20.0 || ^14.13.1 || >=16.0.0"
 	},
 	"scripts": {
-		"test": "xo && ava && tsd"
+		"test": "xo && npm run build && ava && tsd",
+		"build": "npm run clean && npm run build:esm && npm run build:cjs && npm run rename:cjs",
+		"build:esm": "tsc",
+		"build:cjs": "tsc -p tsconfig.cjs.json",
+		"rename:cjs": "mv dist/cjs/index.js dist/cjs/index.cjs && mv dist/cjs/index.d.ts dist/cjs/index.d.cts",
+		"clean": "del-cli dist",
+		"prepare": "npm run build"
 	},
 	"files": [
-		"index.js",
-		"index.d.ts"
+		"dist"
 	],
 	"keywords": [
 		"exit",
@@ -38,12 +54,31 @@
 		"event",
 		"signal",
 		"async",
-		"asynchronous"
+		"asynchronous",
+		"cjs"
 	],
 	"devDependencies": {
-		"ava": "^3.15.0",
+		"@sindresorhus/tsconfig": "^3.0.1",
+		"@types/node": "^18.11.11",
+		"ava": "^5.1.0",
+		"del-cli": "^5.0.0",
 		"execa": "^5.1.1",
-		"tsd": "^0.17.0",
-		"xo": "^0.44.0"
+		"ts-node": "^10.9.1",
+		"tsd": "^0.24.1",
+		"typescript": "^4.9.4",
+		"xo": "^0.53.1"
+	},
+	"ava": {
+		"extensions": {
+			"ts": "module"
+		},
+		"nodeArguments": [
+			"--loader=ts-node/esm"
+		]
+	},
+	"xo": {
+		"parserOptions": {
+			"project": "tsconfig.xo.json"
+		}
 	}
 }
