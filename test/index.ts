@@ -6,7 +6,7 @@ import exitHook, {asyncExitHook} from '../source/index.js';
 
 test('main', async t => {
 	const {stdout, stderr, exitCode} = await execa(process.execPath, ['./test/fixtures/sync.js']);
-	t.is(stdout, 'foo\nbar');
+	t.is(stdout, 'foo\nbar128');
 	t.is(stderr, '');
 	t.is(exitCode, 0);
 });
@@ -19,7 +19,7 @@ test('main-empty', async t => {
 
 test('main-async', async t => {
 	const {stdout, stderr, exitCode} = await execa(process.execPath, ['./test/fixtures/async.js']);
-	t.is(stdout, 'foo\nbar\nquux');
+	t.is(stdout, 'foo\nbar0\nquux0');
 	t.is(stderr, '');
 	t.is(exitCode, 0);
 });
@@ -30,7 +30,7 @@ test('main-async-notice', async t => {
 			EXIT_HOOK_SYNC: '1', // eslint-disable-line @typescript-eslint/naming-convention
 		},
 	});
-	t.is(stdout, 'foo\nbar');
+	t.is(stdout, 'foo\nbar128');
 	t.regex(stderr, /SYNCHRONOUS TERMINATION NOTICE/);
 	t.is(exitCode, 0);
 });

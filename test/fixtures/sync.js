@@ -1,11 +1,12 @@
+import process from 'node:process';
 import exitHook from '../../dist/index.js';
 
 exitHook(() => {
 	console.log('foo');
 });
 
-exitHook(() => {
-	console.log('bar');
+exitHook(code => {
+	console.log(`bar${code}`);
 });
 
 const unsubscribe = exitHook(() => {

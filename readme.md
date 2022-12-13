@@ -2,11 +2,14 @@
 
 > Run some code when the process exits
 
-This is a fork of [sindresorhus/exit-hook](exit-hook) with dual ESM/CJS support.
+This is a fork of [sindresorhus/exit-hook](exit-hook) with the following improvements:
+
+- Passes the exit code to the exit hook
+- ESM/CJS compatible
 
 The `process.on('exit')` event doesn't catch all the ways a process can exit.
 
-This package is useful for cleaning up before exiting.
+This package is useful for cleaning up before exiting (e.g. terminating subprocesses).
 
 ## Install
 
@@ -19,8 +22,8 @@ npm install exit-hook
 ```js
 import exitHook from 'exit-hook';
 
-exitHook(() => {
-	console.log('Exiting');
+exitHook((code) => {
+	console.log('Exiting with code', code);
 });
 
 // You can add multiple hooks, even across files
@@ -54,7 +57,7 @@ Returns a function that removes the hook when called.
 
 #### onExit
 
-Type: `function(): void`
+Type: `function(exitCode: number): void`
 
 The callback function to execute when the process exits.
 
@@ -69,8 +72,8 @@ Please see [Async Notes](#asynchronous-exit-notes) for considerations when using
 ```js
 import {asyncExitHook} from 'exit-hook';
 
-asyncExitHook(async () => {
-	console.log('Exiting');
+asyncExitHook(async (code) => {
+	console.log('Exiting with code', code);
 });
 
 throw new Error('🦄');
@@ -94,7 +97,7 @@ unsubscribe();
 
 #### onExit
 
-Type: `function(): void | Promise<void>`
+Type: `function(exitCode: number): void | Promise<void>`
 
 The callback function to execute when the process exits via `gracefulExit`, and will be wrapped in `Promise.resolve`.
 

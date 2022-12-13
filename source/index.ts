@@ -1,5 +1,7 @@
-export type AsyncCallback = () => Promise<void>;
-export type Callback = () => void;
+import process from 'node:process';
+
+export type AsyncCallback = (exitCode: number) => Promise<void>;
+export type Callback = (exitCode: number) => void;
 type AsyncCallbackConfig = [AsyncCallback, number];
 
 const asyncCallbacks = new Set<AsyncCallbackConfig>();
@@ -25,14 +27,16 @@ async function exit(shouldManuallyExit: boolean, isSynchronous: boolean, signal:
 		].join(' '));
 	}
 
+	const exitCode = 128 + signal;
+
 	const done = (force = false) => {
 		if (force || shouldManuallyExit) {
-			process.exit(128 + signal); // eslint-disable-line unicorn/no-process-exit
+			process.exit(exitCode); // eslint-disable-line unicorn/no-process-exit
 		}
 	};
 
 	for (const callback of callbacks) {
-		callback();
+		callback(exitCode);
 	}
 
 	if (isSynchronous) {
@@ -44,7 +48,7 @@ async function exit(shouldManuallyExit: boolean, isSynchronous: boolean, signal:
 	let forceAfter = 0;
 	for (const [callback, wait] of asyncCallbacks) {
 		forceAfter = Math.max(forceAfter, wait);
-		promises.push(Promise.resolve(callback()));
+		promises.push(Promise.resolve(callback(exitCode)));
 	}
 
 	// Force exit if we exceeded our wait value

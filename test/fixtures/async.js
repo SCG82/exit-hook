@@ -1,11 +1,12 @@
+import process from 'node:process';
 import exitHook, {asyncExitHook, gracefulExit} from '../../dist/index.js';
 
 exitHook(() => {
 	console.log('foo');
 });
 
-exitHook(() => {
-	console.log('bar');
+exitHook(code => {
+	console.log(`bar${code}`);
 });
 
 const unsubscribe = exitHook(() => {
@@ -15,14 +16,14 @@ const unsubscribe = exitHook(() => {
 unsubscribe();
 
 asyncExitHook(
-	async () => {
+	async code => {
 		await new Promise(resolve => {
 			setTimeout(() => {
 				resolve();
 			}, 100);
 		});
 
-		console.log('quux');
+		console.log(`quux${code}`);
 	},
 	{
 		minimumWait: 200,
