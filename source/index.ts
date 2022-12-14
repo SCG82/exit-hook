@@ -126,29 +126,50 @@ export type Options = {
 	 * The amount of time in milliseconds that the `onExit` function is expected to take.
 	 * @default 500
 	 */
-	minimumWait: number;
+	minimumWait?: number;
 };
 
 const defaultOptions: Options = {
 	minimumWait: 500,
 };
 
-export function asyncExitHook(onExit: AsyncCallback, options: Options = defaultOptions) {
+export function asyncExitHook(onExit: AsyncCallback, minimumWait?: number): () => void;
+export function asyncExitHook(onExit: AsyncCallback, options?: Options): () => void;
+export function asyncExitHook(onExit: AsyncCallback, options?: number | Options) {
 	if (typeof onExit !== 'function') {
 		throw new TypeError('onExit must be a function');
 	}
 
-	if (!(typeof options.minimumWait === 'number' && options.minimumWait > 0)) {
-		throw new TypeError('minimumWait must be set to a positive numeric value');
-	}
+	const minimumWait = resolveMinimumWait(options);
 
 	return addHook({
 		onExit,
-		minimumWait: options.minimumWait,
+		minimumWait,
 		isSynchronous: false,
 	});
 }
 
 export function gracefulExit(signal = 0) {
 	void exit(true, false, -128 + signal);
+}
+
+function validateMinimumWait(value: unknown) {
+	if (typeof value !== 'number' || value <= 0) {
+		throw new TypeError('minimumWait must be set to a positive numeric value');
+	}
+
+	return value;
+}
+
+function resolveMinimumWait(options: number | Options = defaultOptions) {
+	if (typeof options === 'number') {
+		return validateMinimumWait(options);
+	}
+
+	if (typeof options === 'object' && options !== null) {
+		const {minimumWait} = {...defaultOptions, ...options};
+		return validateMinimumWait(minimumWait);
+	}
+
+	throw new TypeError('minimumWait must be set to a positive numeric value');
 }

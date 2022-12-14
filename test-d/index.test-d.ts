@@ -2,19 +2,21 @@ import {expectType} from 'tsd';
 import exitHook, {asyncExitHook} from '../source/index.js';
 
 const unsubscribe = exitHook((exitCode: number) => {
-	if (typeof exitCode !== 'number') {
-		throw new TypeError('Expected exitCode to be a number');
-	}
+	console.log('exitCode', exitCode);
 });
 
-const asyncUnsubscribe = asyncExitHook(async (exitCode: number) => {
-	if (typeof exitCode !== 'number') {
-		throw new TypeError('Expected exitCode to be a number');
-	}
-},
-{
-	minimumWait: 300,
-});
+const asyncUnsubscribe = asyncExitHook(
+	async (exitCode: number) =>
+		new Promise(resolve => {
+			setTimeout(() => {
+				console.log('exitCode', exitCode);
+				resolve();
+			}, 100);
+		}),
+	{
+		minimumWait: 300,
+	},
+);
 
 expectType<() => void>(unsubscribe);
 unsubscribe();

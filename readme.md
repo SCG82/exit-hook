@@ -5,6 +5,7 @@
 This is a fork of [sindresorhus/exit-hook](https://github.com/sindresorhus/exit-hook) with the following changes:
 
 - Passes the process exit code as the argument to the hook function
+- Accepts a number for the second argument to `asyncExitHook` to set the `minimumWait` option
 - ESM/CJS compatible
 
 The `process.on('exit')` event doesn't catch all the ways a process can exit.
@@ -62,6 +63,7 @@ Type: `function(exitCode: number): void`
 The callback function to execute when the process exits.
 
 ### asyncExitHook(onExit, minimumWait)
+### asyncExitHook(onExit, options)
 
 Register a function to run during `gracefulExit`.
 
@@ -100,6 +102,13 @@ unsubscribe();
 Type: `function(exitCode: number): void | Promise<void>`
 
 The callback function to execute when the process exits via `gracefulExit`, and will be wrapped in `Promise.resolve`.
+
+#### minimumWait
+
+Type: `number`\
+Default: `500`
+
+The amount of time in milliseconds that the `onExit` function is expected to take.
 
 #### options
 

@@ -18,7 +18,7 @@ test('main-empty', async t => {
 
 test('main-async', async t => {
 	const {stdout, stderr, exitCode} = await execa(process.execPath, ['./test/fixtures/async.mjs']);
-	t.is(stdout, 'foo\nbar0\nquux0');
+	t.is(stdout, 'foo\nbar0\nquux0\nquz');
 	t.is(stderr, '');
 	t.is(exitCode, 0);
 });
@@ -88,6 +88,17 @@ test('type enforcing', t => {
 	// Non-numeric passed to `minimumWait` option.
 	t.throws(() => {
 		// @ts-expect-error - testing type enforcement
-		asyncExitHook(async () => true, {});
+		asyncExitHook(async () => true, {
+			minimumWait: 'seven',
+		});
+	});
+
+	// String passed to `minimumWait` argument.
+	t.throws(() => {
+		// @ts-expect-error - testing type enforcement
+		asyncExitHook(async () => true, '100');
+	},
+	{
+		instanceOf: TypeError,
 	});
 });

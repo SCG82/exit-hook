@@ -1,7 +1,7 @@
 {
 	"name": "@scg82/exit-hook",
-	"version": "3.3.3",
-	"description": "Run some code when the process exits (ESM/CJS)",
+	"version": "3.4.1",
+	"description": "Execute a callback when the process exits, passing the exit code (ESM/CJS)",
 	"license": "MIT",
 	"repository": "https://github.com/SCG82/exit-hook",
 	"author": "SCG82 <scg082+github@gmail.com>",
