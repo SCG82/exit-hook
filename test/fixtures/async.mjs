@@ -1,5 +1,5 @@
 import process from 'node:process';
-import exitHook, {asyncExitHook, gracefulExit} from '../../dist/index.js';
+import exitHook, {asyncExitHook, gracefulExit} from '../../dist/index.mjs';
 
 exitHook(() => {
 	console.log('foo');

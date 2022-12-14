@@ -1,11 +1,20 @@
 import {expectType} from 'tsd';
 import exitHook, {asyncExitHook} from '../source/index.js';
 
-const unsubscribe = exitHook(() => {}); // eslint-disable-line @typescript-eslint/no-empty-function
+const unsubscribe = exitHook((exitCode: number) => {
+	if (typeof exitCode !== 'number') {
+		throw new TypeError('Expected exitCode to be a number');
+	}
+});
 
-const asyncUnsubscribe = asyncExitHook(async () => {}, // eslint-disable-line @typescript-eslint/no-empty-function
-	{minimumWait: 300},
-);
+const asyncUnsubscribe = asyncExitHook(async (exitCode: number) => {
+	if (typeof exitCode !== 'number') {
+		throw new TypeError('Expected exitCode to be a number');
+	}
+},
+{
+	minimumWait: 300,
+});
 
 expectType<() => void>(unsubscribe);
 unsubscribe();

@@ -1,5 +1,5 @@
-import process from 'node:process';
-import exitHook from '../../dist/index.js';
+const process = require('node:process');
+const {default: exitHook} = require('../../dist/index.cjs');
 
 exitHook(() => {
 	console.log('foo');

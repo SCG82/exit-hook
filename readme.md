@@ -1,10 +1,10 @@
 # exit-hook
 
-> Run some code when the process exits
+> Execute a callback when the process exits, passing the exit code
 
-This is a fork of [sindresorhus/exit-hook](exit-hook) with the following improvements:
+This is a fork of [sindresorhus/exit-hook](https://github.com/sindresorhus/exit-hook) with the following changes:
 
-- Passes the exit code to the exit hook
+- Passes the process exit code as the argument to the hook function
 - ESM/CJS compatible
 
 The `process.on('exit')` event doesn't catch all the ways a process can exit.

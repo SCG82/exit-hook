@@ -1,33 +1,32 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 import process from 'node:process';
 import test from 'ava';
 import execa from 'execa';
-import exitHook, {asyncExitHook} from '../source/index.js';
+import exitHook, {asyncExitHook} from '../dist/index.mjs';
 
 test('main', async t => {
-	const {stdout, stderr, exitCode} = await execa(process.execPath, ['./test/fixtures/sync.js']);
+	const {stdout, stderr, exitCode} = await execa(process.execPath, ['./test/fixtures/sync.mjs']);
 	t.is(stdout, 'foo\nbar128');
 	t.is(stderr, '');
 	t.is(exitCode, 0);
 });
 
 test('main-empty', async t => {
-	const {stderr, exitCode} = await execa(process.execPath, ['./test/fixtures/empty.js']);
+	const {stderr, exitCode} = await execa(process.execPath, ['./test/fixtures/empty.mjs']);
 	t.is(stderr, '');
 	t.is(exitCode, 0);
 });
 
 test('main-async', async t => {
-	const {stdout, stderr, exitCode} = await execa(process.execPath, ['./test/fixtures/async.js']);
+	const {stdout, stderr, exitCode} = await execa(process.execPath, ['./test/fixtures/async.mjs']);
 	t.is(stdout, 'foo\nbar0\nquux0');
 	t.is(stderr, '');
 	t.is(exitCode, 0);
 });
 
 test('main-async-notice', async t => {
-	const {stdout, stderr, exitCode} = await execa(process.execPath, ['./test/fixtures/async.js'], {
+	const {stdout, stderr, exitCode} = await execa(process.execPath, ['./test/fixtures/async.mjs'], {
 		env: {
-			EXIT_HOOK_SYNC: '1', // eslint-disable-line @typescript-eslint/naming-convention
+			EXIT_HOOK_SYNC: '1',
 		},
 	});
 	t.is(stdout, 'foo\nbar128');

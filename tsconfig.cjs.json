@@ -4,6 +4,9 @@
 		"module": "commonjs",
 		"outDir": "dist/cjs",
 		"moduleResolution": "node",
-		"declaration": true
+		"declaration": false,
+		"esModuleInterop": true,
+		"lib": ["es2019"],
+		"target": "es2019"
 	}
 }
